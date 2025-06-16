@@ -1,6 +1,7 @@
 from dotenv import dotenv_values
 import asyncio
 import logging
+import random
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -14,17 +15,26 @@ env = dotenv_values('.env')
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
-    await message.answer(f'Привет, *{message.from_user.full_name}*!')
+    await message.answer(f'Привет! Чтобы я начал говорить, напишите /ai')
+
+
+@dp.message(Command('ai'))
+async def command_start_handler(message: Message) -> None:
+    await message.answer(f'Вы начали генерацию сообщений. Чтобы меня остановить, напишите /stop')
 
 
 @dp.message()
-async def normal_message(message: Message):
-    await message.answer(f'Привет, *{message.from_user.full_name}*!')
+async def on_message(message: Message):
+    if random.randint(0, 100) in range(50):
+        await message.answer('Подождите.')
+        return
 
 
 async def main() -> None:
-    bot = Bot(token=env['TOKEN'],
-              default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
+    bot = Bot(
+        token=env['TOKEN'],
+        default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
+    )
     await dp.start_polling(bot)
 
 
