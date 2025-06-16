@@ -22,8 +22,6 @@ async def normal_message(message: Message):
     await message.answer(f'Привет, *{message.from_user.full_name}*!')
 
 
-
-
 async def main() -> None:
     bot = Bot(token=env['TOKEN'],
               default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
